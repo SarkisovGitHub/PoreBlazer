@@ -156,7 +156,7 @@ Additionally, the code will generate the following files:
 
 ## Screenshots
 
-![PB_v4.0.tif](PB_v4.0.tif)
+![PB_v4.0.png](PB_v4.0.png)
 
 ## Contributing
 When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change. 
