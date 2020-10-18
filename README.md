@@ -156,10 +156,10 @@ Additionally, the code will generate the following files:
 
 ## Screenshots
 
-![explorer-screenshot.png](explorer-screenshot.png)
+![PB_v4.0.tif](PB_v4.0.tif)
 
 ## Contributing
-When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change. You can also contact the AAML research group to discuss further contributions and collaborations. Please read [CONTRIBUTING.md](https://github.com/aaml-analytics/mof-explorer/blob/master/CONTRIBUTING.md) for details on our code of conduct.
+When contributing to this repository, please first discuss the change you wish to make via issue, email, or any other method with the owners of this repository before making a change. 
 
 ## **Contact Us**
 **Email**: 
