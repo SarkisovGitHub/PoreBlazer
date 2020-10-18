@@ -145,13 +145,13 @@ V_PO cm^3/g:           		0.759		Probe-occupiable volume, V_(PO,A), cm3/g
 FV_PO:                      	0.67085		Volume fraction, V_(PO,A)/V
 ```
 Additionally, the code will generate the following files:
-- Total_psd_cumulative.txt                  	Total cumulative Pore Size Distribution
-- Total_psd.txt                             	Total pore size distribution
-- Network-accessible_psd_cumulative.txt		Network-accessible cumulative PSD
-- Network-accessible_psd.txt			Network-accessible PSD
-- probe_occupialbe_volume.xyz  			Points sampled within the network-accessible probe-occupiable volume
-- nitrogen_network.xyz                      	Network-accessible nitrogen probe-centre visualization in xyz format (requires correct option in defaults.dat)
-- nitrogen_network.grd				Network-accessible nitrogen probe-centre visualization in grd format (requires correct option in defaults.dat)
+- Total_psd_cumulative.txt                  	*Total cumulative Pore Size Distribution*
+- Total_psd.txt                             	*Total pore size distribution*
+- Network-accessible_psd_cumulative.txt		*Network-accessible cumulative PSD*
+- Network-accessible_psd.txt			*Network-accessible PSD*
+- probe_occupialbe_volume.xyz  			*Points sampled within the network-accessible probe-occupiable volume*
+- nitrogen_network.xyz                      	*Network-accessible nitrogen probe-centre visualization in xyz format (requires correct option in defaults.dat)*
+- nitrogen_network.grd				*Network-accessible nitrogen probe-centre visualization in grd format (requires correct option in defaults.dat)*
 
 
 ## Screenshots
