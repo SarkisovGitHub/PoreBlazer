@@ -1,0 +1,31 @@
+ HKUST1.xyz
+V_A^3    18166.371
+M _g/mol     9674.208
+RHO_g/cm^3        0.884
+PLD_A         6.38
+LCD_A        12.86
+ D            3
+ Total               
+S_AC_A^2      2989.37
+S_AC_m^2/cm^3      1645.55
+S_AC_m^2/g      1860.87
+ Total               
+V_He_A^3    13419.839
+V_He_cm^3/g        0.835
+V_G_A^3    12757.117
+V_G cm^3/g:        0.794
+V_PO A^3:    12243.005
+V_PO cm^3/g:        0.762
+FV_PO:      0.67394
+ Network-accessible  
+S_AC_A^2      2904.59
+S_AC_m^2/cm^3      1598.88
+S_AC_m^2/g      1808.09
+ Network-accessible  
+V_He_A^3    13419.839
+V_He_cm^3/g        0.835
+V_G_A^3    12755.759
+V_G cm^3/g:        0.794
+V_PO A^3:    12186.852
+V_PO cm^3/g:        0.759
+FV_PO:      0.67085

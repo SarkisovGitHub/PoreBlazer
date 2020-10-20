@@ -1,0 +1,1 @@
+..\poreblazer.exe < input.dat > results.txt
