@@ -56,7 +56,7 @@ Contains
         Integer                                                                        :: nc
 
         allocate(cluster(size(lattice_in, 1), size(lattice_in, 2), size(lattice_in, 3)))
-        allocate(cl(100000),trcl(100000))
+        allocate(cl(5000000),trcl(5000000))
         nc = 0
         cluster = 0
         cl = 0
