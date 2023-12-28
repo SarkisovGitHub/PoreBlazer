@@ -19,4 +19,4 @@ jobs:
 
     - name: Build
       working-directory: ./src
-      run: make
+      run: make FORTRAN_COMPILER="gfortran"
