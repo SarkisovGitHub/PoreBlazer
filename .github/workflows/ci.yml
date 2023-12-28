@@ -14,5 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - uses: fortranlang/setup-fortran@v1
+    - uses: fortran-lang/setup-fortran@v1
       id: setup-fortran
+
+    - name: Build
+      working-directory: ./src
+      run: make
