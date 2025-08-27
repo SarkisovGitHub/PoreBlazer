@@ -19,7 +19,7 @@ CMD = poreblazer.exe
 # Make sure it is defined
 #          ifeq ($(strip$(FORTRAN_COMPILER)),)
 # Otherwise you can define it here also by uncommenting next line
-FORTRAN_COMPILER= ifort
+FORTRAN_COMPILER= gfortran
 ifeq ($(FORTRAN_COMPILER),)
  FC = defaultCompiler
 else
@@ -60,10 +60,10 @@ endif
 ###
 ###
 ifeq ($(FC),gfortran)
-F90FLAGS = 
+F90FLAGS = -fopenmp
 DEBUG_FLAGS = 
-OFLAGS = -O2 -unshared
-LINKERFLAGS = 
+OFLAGS = -O2 -unshared -fopenmp
+LINKERFLAGS = -fopenmp
 endif
 
 ### ------------ define flags for nagf95, intel-linux compiler by NAG ---------

@@ -1,0 +1,16 @@
+# Fortran build artifacts
+*.o
+*.mod
+*.exe
+*.i
+a.out
+make.log
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*~

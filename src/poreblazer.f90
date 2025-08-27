@@ -477,8 +477,11 @@ subroutine lattice_calculations
     write(*,*) "!-------------------------------------------------------!"
     write(*,*)
 
-    icount = 0
-
+    ! OpenMP parallel region for the main lattice calculations
+    !$OMP PARALLEL DO DEFAULT(SHARED) &
+    !$OMP PRIVATE(j,k,l,icount,atvec1,overlap,amin,rdist2_ref,rdist_surface_ref) &
+    !$OMP PRIVATE(i,sepvec,rdist2,rdist_surface,sig2_rdist2,rdist6,rdist12,lj_energy) &
+    !$OMP SCHEDULE(DYNAMIC) COLLAPSE(3)
     do l=1, ncubesz                                    ! we go cubelet by cubelet
         do k=1, ncubesy
             do j=1, ncubesx
@@ -531,24 +534,43 @@ subroutine lattice_calculations
                 end if
 
                 lattice_space(j,k,l) = 1                          ! otherwise we add it to the list of geometrically accessible cubelets lattice_space(j,k,l) = 1
-                ng_cubes = ng_cubes + 1
-                g_cubes(ng_cubes) = icount
-
                 lattice_rdist2(j,k,l) = rdist_surface_ref*rdist_surface_ref ! lattice_rdist2(j,k,l) stores the shortest squared distance between cubelet j, k, l and nearest atom (without overlap)
 
                 if(rdist2_ref>0.25*asigma2_he(atype(amin))) then  ! next few lines detect if the cubelet is accessible to helium atom and update the list of
                     lattice_space_he(j,k,l) = 1                   ! helium accessible cubelets lattice_space_He(j,k,l)
-                    !$omp atomic
-                    nhe_cubes = nhe_cubes + 1
-                    he_cubes(nhe_cubes) = icount
                 end if
 
                 if(rdist2_ref>asigma2_n(atype(amin))) then        ! next few lines detect if the cubelet is accessible to nitrogen atom and update the list of
                     lattice_space_n(j,k,l) = 1                    ! nitrogen accessible cubelets lattice_space_N(j,k,l)
+                end if
+
+            end do
+        end do
+    end do
+    !$OMP END PARALLEL DO
+
+    ! Now collect results sequentially to build the cube lists
+    ng_cubes = 0; nhe_cubes = 0; nn_cubes = 0
+    
+    do l=1, ncubesz
+        do k=1, ncubesy
+            do j=1, ncubesx
+                icount = ((l-1) * ncubesx * ncubesy) + ((k-1) * ncubesx) + j
+                
+                if(lattice_space(j,k,l) == 1) then
+                    ng_cubes = ng_cubes + 1
+                    g_cubes(ng_cubes) = icount
+                end if
+                
+                if(lattice_space_he(j,k,l) == 1) then
+                    nhe_cubes = nhe_cubes + 1
+                    he_cubes(nhe_cubes) = icount
+                end if
+                
+                if(lattice_space_n(j,k,l) == 1) then
                     nn_cubes = nn_cubes + 1
                     n_cubes(nn_cubes) = icount
                 end if
-
             end do
         end do
     end do
@@ -792,6 +814,11 @@ subroutine surface_area
 
     stotal = 0.0      ! initialize cumulative accessible surface area
 
+    ! OpenMP parallel region for surface area calculations
+    !$OMP PARALLEL DO DEFAULT(SHARED) &
+    !$OMP PRIVATE(i,j,ncount,phi,costheta,theta,atvec1,atvec2,sepvec,atvec_temp) &
+    !$OMP PRIVATE(nx,ny,nz,deny,k,rdist2,sjreal,sfrac) &
+    !$OMP SCHEDULE(DYNAMIC) REDUCTION(+:stotal)
     do i=1, natoms    ! number of atoms in the structure
 
         ncount = 0
@@ -800,11 +827,14 @@ subroutine surface_area
 
             ! generate random vector of length 1
             ! first generate phi -pi pi
-
+            ! Use critical section for thread-safe random number generation
+            !$OMP CRITICAL
             phi=pi - rranf()*2.0*pi
-
+            
             ! generate theta -pi:pi
             costheta = 1 - rranf() * 2.0
+            !$OMP END CRITICAL
+            
             theta = acos(costheta)
             atvec1%comp(1) = sin(theta) * cos(phi)
             atvec1%comp(2) = sin(theta) * sin(phi)
@@ -874,6 +904,7 @@ subroutine surface_area
         stotal=stotal+sjreal
 
     end do
+    !$OMP END PARALLEL DO
 
     ! converting stotal on Surface per Volume
 
@@ -952,18 +983,24 @@ subroutine pore_distribution
     ! here we go through all cubelets accessible to nitrogen, store distances between the centers of cubelets
     ! and the surface of the nearest neighbour atom in PA1 array, and sort PA1 in an ascending order
 
+    ! OpenMP parallel region for nitrogen accessible cubes data collection
+    !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(j,k,l) SCHEDULE(DYNAMIC) COLLAPSE(3)
     do l=1, ncubesz
         do k=1, ncubesy
             do j=1, ncubesx
                 if(lattice_space_n(j,k,l)<1) cycle
+                ! Thread-safe increment and assignment
+                !$OMP CRITICAL
                 icount = icount + 1
                 PA1(icount) = lattice_rdist2(j,k,l)
                 PA2(icount) = j
                 PA3(icount) = k
                 PA4(icount) = l
+                !$OMP END CRITICAL
             end do
         end do
     end do
+    !$OMP END PARALLEL DO
 
     call sort(nn_cubes,PA1,PA2,PA3,PA4)
 
@@ -1149,18 +1186,24 @@ subroutine limiting_diameter
 
     icount = 0
 
+    ! OpenMP parallel region for data collection
+    !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(j,k,l) SCHEDULE(DYNAMIC) COLLAPSE(3)
     do l=1, ncubesz
         do k=1, ncubesy
             do j=1, ncubesx
                 if(lattice_space(j,k,l)<1) cycle
+                ! Thread-safe increment and assignment
+                !$OMP CRITICAL
                 icount = icount + 1
                 PA1(icount) = lattice_rdist2(j,k,l)
                 PA2(icount) = j
                 PA3(icount) = k
                 PA4(icount) = l
+                !$OMP END CRITICAL
             end do
         end do
     end do
+    !$OMP END PARALLEL DO
 
     call sort(ng_cubes,PA1,PA2,PA3,PA4)
 
