@@ -19,7 +19,7 @@ CMD = poreblazer.exe
 # Make sure it is defined
 #          ifeq ($(strip$(FORTRAN_COMPILER)),)
 # Otherwise you can define it here also by uncommenting next line
-FORTRAN_COMPILER= ifort
+FORTRAN_COMPILER= gfortran
 ifeq ($(FORTRAN_COMPILER),)
  FC = defaultCompiler
 else
@@ -64,6 +64,16 @@ F90FLAGS =
 DEBUG_FLAGS = 
 OFLAGS = -O2 -unshared
 LINKERFLAGS = 
+endif
+
+
+# --------- Apple silicon (M1) override ----------------
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+  ifeq ($(FC),gfortran)
+    OFLAGS = -O2 -fcommon
+    LINKERFLAGS =
+  endif
 endif
 
 ### ------------ define flags for nagf95, intel-linux compiler by NAG ---------
